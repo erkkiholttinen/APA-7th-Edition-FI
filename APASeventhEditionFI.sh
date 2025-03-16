@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # Define the source URL for the file
-SOURCE_URL="https://raw.githubusercontent.com/briankavanaugh/APA-7th-Edition/main/APASeventhEdition.xsl"
+SOURCE_URL="https://raw.githubusercontent.com/erkkiholttinen/APA-7th-Edition/-F!main/APASeventhEditionFI.xsl"
 
 # Get the current username
 USERNAME=$(whoami)
 
 # Define the destination paths
-DESTINATION_PATH_1="/Applications/Microsoft Word.app/Contents/Resources/Style/APASeventhEdition.xsl"
-DESTINATION_PATH_2="/Users/$USERNAME/Library/Containers/com.microsoft.Word/Data/Library/Application Support/Microsoft/Office/Style/APASeventhEdition.xsl"
+DESTINATION_PATH_1="/Applications/Microsoft Word.app/Contents/Resources/Style/APASeventhEditionFI.xsl"
+DESTINATION_PATH_2="/Users/$USERNAME/Library/Containers/com.microsoft.Word/Data/Library/Application Support/Microsoft/Office/Style/APASeventhEditionFI.xsl"
 
 # Download the file and place it in the first destination
 sudo curl "$SOURCE_URL" -o "$DESTINATION_PATH_1"
