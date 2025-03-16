@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt"	xmlns:b="http://schemas.openxmlformats.org/officeDocument/2006/bibliography" xmlns:t="http://www.microsoft.com/temp">
   <xsl:output method="html" encoding="us-ascii"/>
@@ -448,7 +448,8 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:RetrievedFromCap"/>
+    <!-- Note: removed due to GitHub issue #3 https://github.com/briankavanaugh/APA-7th-Edition/issues/3 <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:RetrievedFromCap"/> -->
+    <xsl:text>Haettu %1 osoitteesta %2</xsl:text>
   </xsl:template>
 
   
@@ -459,7 +460,8 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:RetrievedCap"/>
+    <!-- Note: removed due to GitHub issue #3 https://github.com/briankavanaugh/APA-7th-Edition/issues/3 <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:RetrievedCap"/> -->
+    <xsl:text>Haettu %1</xsl:text>
   </xsl:template>
 
   
@@ -470,9 +472,7 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <!-- "retrieved from" should be omitted if there is no date
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:FromCap"/>
-    -->
+    <!-- Note: removed due to GitHub issue #3 https://github.com/briankavanaugh/APA-7th-Edition/issues/3 <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:FromCap"/> -->
     <xsl:text>%1</xsl:text>
   </xsl:template>
 
@@ -539,7 +539,7 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:PagesCountinousShort"/>
+    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:Strings/b:PageShort"/>
   </xsl:template>
 
   
@@ -1756,7 +1756,8 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:General/b:AuthorsSeparator"/>
+    <!--<xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:General/b:AuthorsSeparator"/>-->
+    <xsl:text>&#44;</xsl:text>
   </xsl:template>
 
   
@@ -1778,7 +1779,8 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:General/b:NoCommaBeforeAnd"/>
+    <!--<xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:General/b:NoCommaBeforeAnd"/> -->
+    <xsl:text>yes</xsl:text>
   </xsl:template>
 
   <xsl:template name="templ_prop_SimpleAuthor_F" >
@@ -1978,7 +1980,8 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:APA/b:Date/b:DMY"/>
+    <xsl:value-of select="'%D.%M.%Y'"/>
+    <!--<xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:APA/b:Date/b:DMY"/>-->
   </xsl:template>
 
   
@@ -2022,7 +2025,8 @@
         <xsl:with-param name="LCID" select="$LCID"/>
       </xsl:call-template>
     </xsl:variable>
-    <xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:APA/b:DateAccessed/b:DMY"/>
+    <xsl:value-of select="'%D.%M.%Y'"/>
+    <!--<xsl:value-of select="/*/b:Locals/b:Local[@LCID=$_LCID]/b:APA/b:DateAccessed/b:DMY"/>-->
   </xsl:template>
 
   
@@ -2110,21 +2114,18 @@
     </a>
   </xsl:template>
 
-  <xsl:template name="findAndFormatHyperlink">
-    <xsl:param name="original"/>
-    <xsl:param name="url"/>
-    <xsl:choose>
-      <xsl:when test="contains($original,$url)">
-        <xsl:value-of select="substring-before($original,$url)"/>
-        <xsl:call-template name="formatHyperlink">
-          <xsl:with-param name="url" select="$url"/>
-        </xsl:call-template>
-        <xsl:value-of select="substring-after($original,$url)"/>
-      </xsl:when>
-      <xsl:otherwise>
-        <xsl:value-of select="$original"/>
-      </xsl:otherwise>
-    </xsl:choose>
+  <xsl:template name="removeCharsFromEnd">
+    <xsl:param name="mainString" />
+    <xsl:param name="charsToRemove" />
+    <!-- Calculate the length of the main string -->
+    <xsl:variable name="mainStringLength" select="string-length($mainString)" />
+    <!-- Calculate the length of the characters to remove -->
+    <xsl:variable name="charsToRemoveLength" select="string-length($charsToRemove)" />
+    <!-- Check if the main string is longer than the characters to remove -->
+    <xsl:if test="$mainStringLength > $charsToRemoveLength">
+        <!-- Remove characters from the end of the main string -->
+        <xsl:value-of select="substring($mainString, 1, $mainStringLength - $charsToRemoveLength)" />
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="/">
@@ -2136,146 +2137,146 @@
       </xsl:when>
 
       <xsl:when test="b:OfficeStyleKey">
-        <xsl:text>APA</xsl:text>
+        <xsl:text>APA7 FI</xsl:text>
       </xsl:when>
 
-      <xsl:when test="b:XslVersion">
-        <xsl:text>7</xsl:text>
+       <xsl:when test="b:XslVersion">
+	      <xsl:text>7</xsl:text>
       </xsl:when>
 
       <xsl:when test="b:StyleNameLocalized">
         <xsl:choose>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1033'">
-            <xsl:text>APA7</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1025'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1037'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1041'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='2052'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1028'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1042'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1036'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1040'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='3082'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1043'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1031'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1046'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1049'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1035'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1032'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1081'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1054'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1057'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1086'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1066'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1053'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1069'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1027'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1030'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1110'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1044'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1061'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1062'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1063'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1045'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='2070'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1029'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1055'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1038'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1048'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1058'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1026'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1050'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1087'">
-            <xsl:text>Американдық психологиялық қауымдастық</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='2074'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='3098'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1051'">
-            <xsl:text>APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
           <xsl:when test="b:StyleNameLocalized/b:Lcid='1060'">
-            <xsl:text>Standard APA</xsl:text>
+            <xsl:text>APA7 FI</xsl:text>
           </xsl:when>
         </xsl:choose>
       </xsl:when>
@@ -2347,10 +2348,10 @@
               <b:ImportantField>
                 <xsl:text>b:Volume</xsl:text>
               </b:ImportantField>              
-              <b:ImportantField>
+	      <b:ImportantField>
                 <xsl:text>b:Issue</xsl:text>
               </b:ImportantField>              
-              <b:ImportantField>
+	      <b:ImportantField>
                 <xsl:text>b:DOI</xsl:text>
               </b:ImportantField>
             </xsl:when>
@@ -2377,10 +2378,10 @@
               <b:ImportantField>
                 <xsl:text>b:Pages</xsl:text>
               </b:ImportantField>
-              <b:ImportantField>
+             <b:ImportantField>
                 <xsl:text>b:URL</xsl:text>
               </b:ImportantField>
-              <b:ImportantField>
+            <b:ImportantField>
                 <xsl:text>b:DOI</xsl:text>
               </b:ImportantField>
             </xsl:when>
@@ -2392,13 +2393,13 @@
               <b:ImportantField>
                 <xsl:text>b:Title</xsl:text>
               </b:ImportantField>
-      	      <b:ImportantField>
+	      <b:ImportantField>
                 <xsl:text>b:ConferenceName</xsl:text>
               </b:ImportantField>
               <b:ImportantField>
                 <xsl:text>b:Year</xsl:text>
               </b:ImportantField>
-	            <b:ImportantField>
+	      <b:ImportantField>
                 <xsl:text>b:Month</xsl:text>
               </b:ImportantField>
               <b:ImportantField>
@@ -2428,7 +2429,7 @@
               <b:ImportantField>
                 <xsl:text>b:Year</xsl:text>
               </b:ImportantField>
-		          <b:ImportantField>
+		<b:ImportantField>
                 <xsl:text>b:Month</xsl:text>
               </b:ImportantField>
               <b:ImportantField>
@@ -2697,7 +2698,7 @@
 
 
 			<xsl:when test="b:Citation">
-
+       
 				<xsl:variable name="ListPopulatedWithMain">
 						<xsl:call-template name="populateMain">
 							<xsl:with-param name="Type">b:Citation</xsl:with-param>
@@ -2720,6 +2721,7 @@
 						</xsl:variable>
 
 						<xsl:element name="p">
+              
 
 						<xsl:attribute name="lang">
 							<xsl:value-of select="/*/b:Locals/b:Local[@LCID=$LCID]/@Culture"/>
@@ -2988,8 +2990,28 @@
 							</xsl:if>
 						</xsl:variable>
 
-						<xsl:variable name="pages" select="msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Pages"/>
-
+            <xsl:variable name="paragraphRef">
+              <xsl:choose>
+                <xsl:when test="starts-with(msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Pages, 'kpl')">
+                  <xsl:value-of select="'yes'" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="'no'" />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+              
+            <xsl:variable name="pages"> <!-- select="msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Pages" -->
+              <xsl:choose>
+                <xsl:when test="starts-with(msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Pages, 'kpl')">
+                  <xsl:value-of select="substring(msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Pages, 4)" />
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Pages" />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+             
 						<xsl:variable name="ppPages">
 							<xsl:if test="string-length($pages)>0">
 								<xsl:choose>
@@ -3064,16 +3086,27 @@
 							<xsl:value-of select="msxsl:node-set($ListPopulatedWithMain)/b:Citation/b:Source/b:Tag"/>
 						</xsl:if>
 
-						<xsl:if test="string-length($volume) > 0 or string-length($pages) > 0">
+            <xsl:variable name="pages2">
+              <xsl:choose>
+                <xsl:when test="starts-with($pages, 'kpl')">
+                  <xsl:value-of select="substring($pages, 4)"/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:value-of select="$pages"/>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:variable>
+
+						<xsl:if test="string-length($volume) > 0 or string-length($pages2) > 0">
 							<xsl:if test="string-length($displayAuthor) > 0 or string-length($displayTitle) > 0 or string-length($year) > 0">
 								<xsl:call-template name="templ_prop_ListSeparator"/>
 							</xsl:if>
 
 							<xsl:choose>
-								<xsl:when test="string-length($volume) > 0 and string-length($pages) > 0">
+								<xsl:when test="string-length($volume) > 0 and string-length($pages2) > 0">
 									<xsl:value-of select="$volume"/>
 									<xsl:call-template name="templ_prop_Enum"/>
-									<xsl:value-of select="$pages"/>
+									<xsl:value-of select="$pages2"/>
 								</xsl:when>
 								<xsl:when test="string-length($volVolume) > 0">
 									<xsl:value-of select="$volVolume"/>
@@ -3087,9 +3120,15 @@
 						<xsl:if test="/b:Citation/b:PageSuffix">
 							<xsl:value-of select="/b:Citation/b:PageSuffix"/>
 						</xsl:if>
+              
+            <xsl:if test="$paragraphRef = 'yes' ">
+              <xsl:value-of select="'.'" />  
+            </xsl:if>
+              
 						<xsl:if test="/b:Citation/b:LastAuthor">
 							<xsl:call-template name="templ_prop_CloseBracket"/>
 						</xsl:if>
+              
 						<xsl:if test="not(/b:Citation/b:LastAuthor)">
 							<xsl:call-template name="templ_prop_GroupSeparator"/>
 						</xsl:if>
@@ -5628,9 +5667,13 @@
                         <xsl:with-param name="url" select="concat($doiPrefix, $doi)"/>
                       </xsl:call-template>
                   </xsl:when>
-                  <xsl:when test="string-length($tempRDAFU)>0">
-                    <xsl:call-template name="findAndFormatHyperlink">
-                      <xsl:with-param name="original" select="$tempRDAFU"/>
+                  <xsl:when test="string-length($tempRDAFU) > 0">
+                    <!--<xsl:value-of select="$tempRDAFU"/>-->
+                    <xsl:call-template name="removeCharsFromEnd">
+                        <xsl:with-param name="mainString" select="$tempRDAFU" />
+                        <xsl:with-param name="charsToRemove" select="b:URL" />
+                    </xsl:call-template>
+                    <xsl:call-template name="formatHyperlink">
                       <xsl:with-param name="url" select="b:URL"/>
                     </xsl:call-template>
                   </xsl:when>
@@ -5822,7 +5865,6 @@
           <xsl:if test="$Type='b:Citation'">
           
             <b:Title>
-              
               <xsl:if test="string-length(b:Title)>0">
                 <xsl:value-of select="b:Title"/>
               </xsl:if>
