@@ -6,6 +6,12 @@ Until (unless) Microsoft gets around to adding a template for the latest version
 
 ## How to Use
 
+After installation, select APA7 FI option in the Word reference style list.
+
+In order to create the paragraph citation correctly, where the dot is within the parenthesis, prefix the citation pages with text "kpl" (without the quotation marks). This causes that the ciation will be written as (WriterName, Year.) instead of (WriterName, Year)
+
+## Installation
+
 ### Windows
 
 #### Manual Method
