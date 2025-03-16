@@ -35,7 +35,7 @@ curl https://raw.githubusercontent.com/erkkiholttinen/APA-7th-Edition-FI/main/AP
 
 #### Manual method
 1. Exit Word
-2. Using Finder, copy the file APASeventhEdition.xsl to *two* locations:
+2. Using Finder, copy the file APASeventhEditionFI.xsl to *two* locations:
     1. HD/Applications/Microsoft Word.app/Contents/Resources/Style/ (note that you will have to right-click and "View Contents" on the app icon at HD/Applications/Microsoft Word.app/)
     2. HD/Users/\<your_user_name>/Library/Containers/com.microsoft.Word/Data/Library/Application Support/Microsoft/Office/Style/
 2. Restart Word and from the References tab in Word, you should be able to choose APA7. 
