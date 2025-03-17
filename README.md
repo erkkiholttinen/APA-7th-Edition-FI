@@ -1,30 +1,31 @@
 # APA 7th Edition (FI) for Microsoft Word
 
-Until (unless) Microsoft gets around to adding a template for the latest version, this is the APA 7th Edition XSLT modified by Mike Slagle and Brian Kavanaugh. 
+Kunnes (ellei) Microsoft lisää mallin uusimmalle versiolle, tämä on alunperin Mike Slaglen ja Brian Kavanaugh'n muokkaama APA 7th Edition XSLT.
 
-**IMPORTANT**: These files are provided as a courtesy to those needing a better option for APA 7 than what Microsoft currently provides when using Finnish language. I did not create the template, just modified it a bit. If there are issues, take the time to make the changes necessary (if possible; there are limitations to what can be done) and submit a pull request.
+**TÄREKÄÄ**: Nämä tiedostot tarjotaan kohteliaisuutena niille, jotka tarvitsevat paremman vaihtoehdon APA 7:lle kuin mitä Microsoft tällä hetkellä tarjoaa suomen kieltä käytettäessä. En luonut mallia, vain muokkasin sitä hieman. Jos on ongelmia, voit koittaa tehdä tarvittavat muutokset (jos mahdollista; on olemassa rajoituksia sille, mitä voidaan tehdä) jonka jälkeen lähetä pull-pyyntö, jotta korjaukset saadaan jakoon muillekin.
 
 ## How to Use
 
-After installation, select APA7 FI option in the Word reference style list.
+Asennuksen jälkeen valitse Wordin viittaustyyliluettelosta APA7 FI -vaihtoehto.
 
-In order to create the paragraph citation correctly, where the dot is within the parenthesis, prefix the citation pages (secondary mouse button on the citation and select "Edit citation") with text "kpl" (without the quotation marks). This causes that the ciation will be written as (WriterName, Year.) instead of (WriterName, Year)
+Jotta kappaleviittaus saadaan luotua oikein niin että piste on sulkeiden sisällä, lisää viittauksen sivujen eteen teksti "kpl" (ilman lainausmerkkejä) (toissijainen hiiren painike viittauksessa ja valitse "Muokkaa viittausta"). Tämä aiheuttaa sen, että viittaus kirjoitetaan muodossa (KirjoittajanNimi, Vuosi.) sen sijaan, että se olisi (KirjoittajanNimi, Vuosi).
 
-## Installation
+## Asennus
 
 ### Windows
 
-#### Manual Method
-1. Exit Word
-2. Using Windows Explorer, copy the file APASeventhEditionFI.xsl to C:\Users\<your_user_name>\AppData\Roaming\Microsoft\Bibliography\Style 
-3. Restart Word and from the References tab in Word, you should be able to choose APA7. 
+#### Manuaalinen tapa
+1. Sulje Word
+2. Käytä Windows Explorer työkalua, kopioi tiedosto APASeventhEditionFI.xsl kansioon C:\Users\<your_user_name>\AppData\Roaming\Microsoft\Bibliography\Style 
+3. Käynnistä Word. Lähdeviittauksissa tulisi nyt olla tyyli APA7 FI.
+   
+#### Asennus Bat tiedoston avulla
+1. Sulje word
+2. Kopioi APASeventhEditionFI.bat tiedosto ja tarvittaessa muokkaa tiedoston asetuksia, jotta voit ajaa sen.
+3. Aja APASeventhEditionFI.bat tiedosto.
+4. Käynnistä Word. Lähdeviittauksissa tulisi nyt olla tyyli APA7 FI.
 
-#### Bat file method / Cmd method
-1. Exit word
-2. Copy the APASeventhEditionFI.bat file and allow it to run.
-3. Restart Word and from the References tab in Word, you should be able to choose APA7. 
-
-Note: The bat file simply runs the following line:
+Huomio: Bat tiedosto ajaa yksinkertaisesti seuraavan komennon:
 ```
 curl https://raw.githubusercontent.com/erkkiholttinen/APA-7th-Edition-FI/main/APASeventhEditionFI.xsl -o "%appdata%\Microsoft\Bibliography\Style\APASeventhEditionFI.xsl"
 ```
@@ -33,31 +34,31 @@ curl https://raw.githubusercontent.com/erkkiholttinen/APA-7th-Edition-FI/main/AP
 
 ### MacOS
 
-#### Manual method
-1. Exit Word
-2. Using Finder, copy the file APASeventhEditionFI.xsl to *two* locations:
-    1. HD/Applications/Microsoft Word.app/Contents/Resources/Style/ (note that you will have to right-click and "View Contents" on the app icon at HD/Applications/Microsoft Word.app/)
+#### Manuaalinen tapa
+1. Sulje Word
+2. Käytä Finder työkalua ja kopioi tiedosto APASeventhEditionFI.xsl seuraaviin kasnioihin:
+    1. HD/Applications/Microsoft Word.app/Contents/Resources/Style/
     2. HD/Users/\<your_user_name>/Library/Containers/com.microsoft.Word/Data/Library/Application Support/Microsoft/Office/Style/
-2. Restart Word and from the References tab in Word, you should be able to choose APA7. 
+2. Käynnistä Word. Lähdeviittauksissa tulisi nyt olla tyyli APA7 FI. 
 
-#### Shell script method / terminal method
-* __The file asks for elevated priveliges using `sudo`. Only run files you trust and understand the contents of.__
-1. Exit word and ensure it is closed before proceeding
-2. Copy the APASeventhEditionFI.sh file to a local folder
-3. Open the terminal (Search "Terminal through spotlight)
-4. Navigate to the folder containing the shell script
+#### Asennus Shell scriptin avulla
+* __Tiedosto pyyttää sudo oikeuksia. Aja tiedostoja sudo oikeuksilla vain jos varmasti ymmärrät mitä olet tekemässä.__
+1. Sulje Word
+2. Kopioi APASeventhEditionFI.sh tiedosto lokaaliin kansioon
+3. Avaa Terminal applikaatio
+4. Navigoi kansioon, jonne kopioit APASeventhEditionFI.sh tiedoston
     1. `cd /path/to/your/file`
-5. Run the script
+5. Aja sh tiedosto
     1. `bash APASeventhEditionFI.sh`
-    2. Enter password when prompted. The terminal stay blank while password is entered. Once entered, press enter
-    3. The files should be placed in their corresponding folders
+    2. Kysyttäessä anna salasana sudo käskyä varten
+    3. Tiedostojen tulisi kopioitua tarvittaviin paikkoin
+6. Käynnistä Word. Lähdeviittauksissa tulisi nyt olla tyyli APA7 FI.
+   
+Huomioita:  
+* Bash scripti käyttää curl käskyä, jolla se hakee trvittavat tiedostot githubista ja sijoittaa ne paikalliseen kansioon.
+* Bash scripti tarkistaa, että tiedosto on kopioitunut ensimmäiseen kansioon oikein ja vasta tämän jälkeen tiedosto kopioidaan seuraavaan kansioon.
 
-Notes:  
-* The bash file will use the `curl` command to retrieve the file from github at the specified link and place it in the first of the specified folders above.
-* It will then check if the file was placed in the folder successfully, and then copy the file from the first folder to the next.
-* I do not have a Mac to test this on. The script was run successfully on a Mac with Office installed.
 
+## Vastuuvapauslauseke
 
-## Disclaimer
-
-(same as Mike's and Brian's) I am only providing this file and the necessary location for it for education purposes. If any installations of MS Office are corrupted as a result of using this file, I am not responsible to address or repair any issues. 
+(sama kuin Mike'n ja Brian'n) Tarjoan tätä tiedostoa ja sen tarvittavaa sijaintia vain koulutustarkoituksiin. Jos MS Office -asennukset vahingoittuvat tämän tiedoston käytön seurauksena, en ole vastuussa ongelmien korjaamisesta tai korjaamisesta.
